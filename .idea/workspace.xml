@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5ae2fd3-b5c6-4e00-9f7d-f8dcf0d2dbd8" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/k_data/data_price_w_14" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/k_data/data_price_w_15" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/k_data/data_price_w_16" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/k_data/data_price_w_17" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/k_manager/_manager.py" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="$PROJECT_DIR$/core/__init__.py" afterPath="$PROJECT_DIR$/k_manager/__init__.py" />
-      <change beforePath="$PROJECT_DIR$/core/ts_manager.py" afterPath="$PROJECT_DIR$/k_manager/trend_manager.py" />
-      <change beforePath="$PROJECT_DIR$/k_backtest/__init__.py" afterPath="$PROJECT_DIR$/k_backtest/__init__.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -40,7 +31,7 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="119">
-              <caret line="7" column="20" lean-forward="false" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+              <caret line="7" column="29" lean-forward="false" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -567,7 +558,7 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
-          <caret line="7" column="20" lean-forward="false" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+          <caret line="7" column="29" lean-forward="false" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
           <folding />
         </state>
       </provider>
