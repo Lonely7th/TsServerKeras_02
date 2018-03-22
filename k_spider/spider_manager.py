@@ -5,6 +5,7 @@ __title__ = ''
 __author__ = 'JN Zhang'
 __mtime__ = '2018/3/22'
 """
+import json
 import os
 import bs4
 from time import sleep
@@ -16,66 +17,65 @@ from k_data.k_logs.logs_manager import LogsManager
 base_path = os.path.abspath(os.path.join(os.getcwd(), ".."))
 
 
-def creat_base_files():
-    path_file_code = base_path + "/k_data/data_code.txt"
-    file_code = open(path_file_code)
-
-    print(path_file_code)
-    pass
-
-
 # 从指定位置开始爬取数据
 def start_spider():
     path_file_code = base_path + "/k_data/data_code.txt"
-    file_code = open(path_file_code)
-    pass
+    file_code = open(path_file_code, "r", encoding='utf-8')
+    while True:
+        tk_code = file_code.readline()
+        if "" == tk_code:
+            break
+        get_html(tk_code[:6])
 
 
-def get_url(self, year, season):
-    code_list = self.dm.find_by_id("")
-    for item in code_list[:50]:
-        key = item["code"][:6]
-        url = "http://quotes.money.163.com/trade/lsjysj_" + key + ".html?year=" + year + "&season=" + season
+# 获取页面内容
+def get_html(tk_code):
+    result_list = []
+    for item_date in date_list:
+        url = "http://quotes.money.163.com/trade/lsjysj_" + tk_code + ".html?year=" + str(item_date[0]) + "&season=" + str(item_date[1])
+        print(url)
         # 请求失败后重新请求(最多8次)
         max_try = 8
         for tries in range(max_try):
             try:
-                content = requests.get(url)
-                self.parse_pager(content.content, item["code"])
+                content = requests.get(url).content
+                # 解析页面
+                soup = bs4.BeautifulSoup(content, "lxml")
+                parse_list = soup.select("div.inner_box tr")
+                for item in parse_list[1:]:
+                    data = [x.string for x in item.select("td")]
+                    price = {
+                        "cur_timer": data[0],
+                        "cur_open_price": data[1],
+                        "cur_max_price": data[2],
+                        "cur_min_price": data[3],
+                        "cur_close_price": data[4],
+                        "cur_price_range": data[6],
+                        "cur_total_volume": data[7],
+                        "cur_total_money": data[8]
+                    }
+                    result_list.append(price)
                 break
             except Exception:
                 if tries < (max_try - 1):
                     sleep(2)
                     continue
                 else:
-                    logger.error("SpiderError：" + key)
-    code_list.close()
+                    logger.error("SpiderError：" + tk_code)
+    # 保存数据
+    __file = open("D:\_ticker_data\\" + str(tk_code) + ".txt", "w")
+    __file.write(json.dumps(result_list))
+    __file.close()
 
-def parse_pager(self, content, key):
-    try:
-        _result = self.dm.find_by_id(key)
-        timer_list = [x["cur_timer"] for x in _result["price_list"]]
-        soup = bs4.BeautifulSoup(content, "lxml")
-        parse_list = soup.select("div.inner_box tr")
-        for item in parse_list[1:]:
-            data = [x.string for x in item.select("td")]
-            price = {
-                "cur_timer": data[0],
-                "cur_open_price": data[1],
-                "cur_max_price": data[2],
-                "cur_min_price": data[3],
-                "cur_close_price": data[4],
-                "cur_price_range": data[6],
-                "cur_total_volume": data[7],
-                "cur_total_money": data[8]
-            }
-            if price["cur_timer"] not in timer_list:
-                self.dm.add_tk_item(key, price)
-    except Exception:
-        logger.error("SpiderError：" + key)
+
+def creat_date_list():
+    for year in range(2007, 2018):
+        for season in range(1, 5):
+            yield (year, season)
 
 
 if __name__ == "__main__":
-    logger = LogsManager("spider_error").get_logger()
+    logger = LogsManager("logs_spider").get_logger()
+    date_list = list(reversed([c for c in creat_date_list()]))
     start_spider()
     pass
