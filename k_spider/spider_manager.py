@@ -6,6 +6,7 @@ __author__ = 'JN Zhang'
 __mtime__ = '2018/3/22'
 """
 import json
+import multiprocessing
 import os
 import bs4
 from time import sleep
@@ -18,18 +19,14 @@ base_path = os.path.abspath(os.path.join(os.getcwd(), ".."))
 
 
 # 从指定位置开始爬取数据
-def start_spider():
-    path_file_code = base_path + "/k_data/data_code.txt"
-    file_code = open(path_file_code, "r", encoding='utf-8')
-    while True:
-        tk_code = file_code.readline()
-        if "" == tk_code:
-            break
-        get_html(tk_code[:6])
+def start_spider(code_list):
+    date_list = list(reversed([c for c in creat_date_list()]))
+    for code in code_list:
+        get_html(code, date_list)
 
 
 # 获取页面内容
-def get_html(tk_code):
+def get_html(tk_code, date_list):
     result_list = []
     for item_date in date_list:
         url = "http://quotes.money.163.com/trade/lsjysj_" + tk_code + ".html?year=" + str(item_date[0]) + "&season=" + str(item_date[1])
@@ -68,14 +65,30 @@ def get_html(tk_code):
     __file.close()
 
 
+# 获取日期组合
 def creat_date_list():
     for year in range(2007, 2018):
         for season in range(1, 5):
             yield (year, season)
 
 
+# 获取股票代码列表
+def creat_code_list():
+    path_file_code = base_path + "/k_data/data_code.txt"
+    file_code = open(path_file_code, "r", encoding='utf-8')
+    while True:
+        tk_code = file_code.readline()
+        if "" == tk_code:
+            break
+        yield tk_code[:6]
+
+
 if __name__ == "__main__":
     logger = LogsManager("logs_spider").get_logger()
-    date_list = list(reversed([c for c in creat_date_list()]))
-    start_spider()
-    pass
+    code_list = [item for item in creat_code_list()]
+    pool = multiprocessing.Pool(processes=3)
+    pool.apply_async(start_spider, args=(code_list[:1000], ))
+    pool.apply_async(start_spider, args=(code_list[1000:2000], ))
+    pool.apply_async(start_spider, args=(code_list[2000:], ))
+    pool.close()
+    pool.join()
