@@ -87,8 +87,8 @@ if __name__ == "__main__":
     logger = LogsManager("logs_spider").get_logger()
     code_list = [item for item in creat_code_list()]
     pool = multiprocessing.Pool(processes=3)
-    pool.apply_async(start_spider, args=(code_list[:1000], ))
-    pool.apply_async(start_spider, args=(code_list[1000:2000], ))
-    pool.apply_async(start_spider, args=(code_list[2000:], ))
+    pool.apply_async(start_spider, args=(code_list[:1200], ))
+    pool.apply_async(start_spider, args=(code_list[1200:2400], ))
+    pool.apply_async(start_spider, args=(code_list[2400:], ))
     pool.close()
     pool.join()
