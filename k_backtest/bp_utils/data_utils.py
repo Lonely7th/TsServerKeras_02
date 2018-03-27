@@ -20,13 +20,12 @@ class DataUtils:
     def __init__(self, table_name):
         """
         连接MongoClient
-        由3种方法可以选择，看使用情况
         """
         # 指定端口和地址
-        self.client = MongoClient(mod_config.get_config("database", "dbhost"), int(mod_config.get_config("database", "dbport")))
+        self.client = MongoClient("127.0.0.1", 27017)
 
         # 选择数据库
-        self.db = self.client[mod_config.get_config("database", "dbname")]
+        self.db = self.client["bp_ticker_details"]
         self.table = self.db[table_name]
 
     def clsoe_db(self):
